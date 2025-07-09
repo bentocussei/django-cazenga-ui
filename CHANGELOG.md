@@ -5,7 +5,49 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [0.1.1] - 2025-07-09
+## [0.1.6] - 2025-01-09
+
+### 🎯 Correção Definitiva
+- **Problema identificado**: `tailwind init` faz DUAS perguntas, não apenas uma
+  1. "Your Tailwind app/theme name (theme):"
+  2. "Include daisyUI plugin? 1 - no, 2 - yes"
+- **Solução**: Enviar ambas as respostas: `"theme\n1\n"` (nome + não incluir daisyUI)
+- **Resultado**: Elimina erro "EOF when reading a line" completamente
+
+### Debug Revelador
+- Versão 0.1.5 permitiu capturar o STDOUT exato do comando
+- Descobriu que o comando esperava duas entradas, não uma
+- Evidência: `'  [1/2] Your Tailwind app/theme name... [2/2] Include daisyUI plugin?'`
+
+## [0.1.5] - 2025-01-09
+
+### Melhorias
+- **Debug detalhado**: Adicionado logging completo para diagnosticar problemas com `tailwind init`
+- **Fallback manual**: Se modo automático falhar, oferece instruções para execução manual
+- **Timeout handling**: Implementado timeout de 30s para evitar travamentos
+- **Verificação robusta**: Confirma se app theme foi criada antes de continuar
+
+### Debug
+- Mostra comando exato executado
+- Exibe input enviado ao processo
+- Captura stdout/stderr completos
+- Traceback detalhado em caso de exceção
+
+## [0.1.4] - 2025-01-09
+
+### Correções
+- **Comando tailwind init**: Revertido para implementação original que funciona corretamente
+- **subprocess.Popen**: Usa `communicate()` com input via stdin (abordagem correta para django-tailwind)
+- **Compatibilidade**: Funciona com todas as versões do django-tailwind que esperam input interativo
+- **Lição**: A versão original já estava correta, problema era diferença entre código local vs PyPI
+
+## [0.1.3] - 2025-01-09
+
+### Correções (Revertidas)
+- ~~Tentativa de compatibilidade com argumentos diretos~~ (não era necessário)
+- ~~Fallback automático~~ (complicou desnecessariamente)
+
+## [0.1.2] - 2025-01-09
 
 ### Melhorias
 - **Instalação simplificada**: Dependências Tailwind (django-tailwind, django-browser-reload, django-mathfilters) agora são instaladas automaticamente com `pip install django-cazenga-ui`
@@ -13,8 +55,14 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - **Documentação atualizada**: Simplificado comando de instalação em README, TUTORIAL e comandos CLI
 
 ### Correções
+- **Comando tailwind init**: Corrigido erro "EOF when reading a line" ao executar `python manage.py cazenga init --with-tailwind`
 - **Prevenção de erros**: Eliminado `ModuleNotFoundError` para django-tailwind, django-browser-reload e django-mathfilters
 - **Experiência do usuário**: Instalação "funciona na primeira vez" sem necessidade de instalar dependências separadamente
+
+## [0.1.1] - 2025-07-09 (Publicado)
+
+### Melhorias  
+- Dependências Tailwind movidas para principais
 
 ## [0.1.0] - 2025-07-08
 

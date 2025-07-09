@@ -363,50 +363,103 @@ class Command(BaseCommand):
                 # 1. Executar tailwind init {self.TAILWIND_APP_NAME}
                 self.stdout.write(f'  🏗️ Criando app {self.TAILWIND_APP_NAME}...')
                 
-                process = subprocess.Popen(
-                    [sys.executable, 'manage.py', 'tailwind', 'init'],
-                    stdin=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    cwd=base_dir,
-                    text=True
-                )
-                
-                # Envia nome da app configurada
-                stdout, stderr = process.communicate(input=f'{self.TAILWIND_APP_NAME}\n')
-                
-                if process.returncode != 0:
-                    self.stdout.write(f'  ❌ Erro ao criar app {self.TAILWIND_APP_NAME}: {stderr}')
+                # Tentar primeiro abordagem simples com timeout
+                try:
+                    # Debug: comando sendo executado
+                    cmd = [sys.executable, 'manage.py', 'tailwind', 'init']
+                    self.stdout.write(f'  📋 Executando: {" ".join(cmd)}')
                     
-                    # Se o erro indica que o comando tailwind não foi encontrado
-                    if 'Unknown command' in stderr or 'tailwind' in stderr:
-                        self.stdout.write('')
-                        self.stdout.write('  🔧 Isso indica que o django-tailwind não está no INSTALLED_APPS.')
-                        self.stdout.write('  💡 Adicione as seguintes apps ao settings.py:')
-                        self.stdout.write('')
-                        self.stdout.write('  INSTALLED_APPS += [')
-                        self.stdout.write("      'tailwind',")
-                        self.stdout.write("      'cazenga_ui',")
-                        self.stdout.write("      'django_browser_reload',")
-                        self.stdout.write("      'mathfilters',")
-                        self.stdout.write('  ]')
-                        self.stdout.write('')
-                        self.stdout.write('  MIDDLEWARE += [')
-                        self.stdout.write("      'django_browser_reload.middleware.BrowserReloadMiddleware',")
-                        self.stdout.write('  ]')
-                        self.stdout.write('')
-                        self.stdout.write(f"  TAILWIND_APP_NAME = '{self.TAILWIND_APP_NAME}'")
-                        self.stdout.write('  NPM_BIN_PATH = r"C:\\Program Files\\nodejs\\npm.cmd"  # Windows')
-                        self.stdout.write('')
-                        self.stdout.write('  ✅ Depois de configurar, execute novamente:')
-                        self.stdout.write('     python manage.py cazenga init --with-tailwind')
+                    process = subprocess.Popen(
+                        cmd,
+                        stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        cwd=base_dir,
+                        text=True
+                    )
                     
+                    # Enviar respostas para as duas perguntas do tailwind init
+                    self.stdout.write(f'  📤 Configurando app: {self.TAILWIND_APP_NAME}')
+                    self.stdout.write(f'  📤 DaisyUI: Não incluir')
+                    
+                    # Tentar com timeout
+                    try:
+                        # Enviar DUAS respostas: nome da app + resposta daisyUI
+                        input_data = f'{self.TAILWIND_APP_NAME}\n1\n'
+                        stdout, stderr = process.communicate(input=input_data, timeout=30)
+                    except subprocess.TimeoutExpired:
+                        self.stdout.write('  ⏱️ Timeout na execução automática')
+                        process.kill()
+                        stdout, stderr = process.communicate()
+                        
+                        # Fallback para modo manual
+                        self.stdout.write('')
+                        self.stdout.write('  🔄 Modo automático falhou. Vamos tentar modo manual:')
+                        self.stdout.write('  📋 Execute manualmente:')
+                        self.stdout.write('     python manage.py tailwind init')
+                        self.stdout.write(f'     (quando perguntar o nome, digite: {self.TAILWIND_APP_NAME})')
+                        self.stdout.write('     (quando perguntar sobre daisyUI, digite: 1)')
+                        self.stdout.write('')
+                        
+                        # Aguardar confirmação do usuário
+                        response = input('  ❓ Após executar o comando acima, digite "ok" para continuar: ').strip().lower()
+                        if response != 'ok':
+                            self.stdout.write('  ❌ Configuração cancelada pelo usuário')
+                            return False
+                        
+                        # Verificar se a app foi criada
+                        if self._has_tailwind_app():
+                            self.stdout.write(f'  ✅ App {self.TAILWIND_APP_NAME} detectada!')
+                        else:
+                            self.stdout.write(f'  ❌ App {self.TAILWIND_APP_NAME} ainda não foi encontrada')
+                            return False
+                    
+                    # Verificar resultado
+                    if process.returncode != 0:
+                        self.stdout.write(f'  ❌ Erro ao criar app {self.TAILWIND_APP_NAME}: {stderr}')
+                        
+                        # Debug apenas em caso de erro
+                        self.stdout.write(f'  🔍 Return code: {process.returncode}')
+                        self.stdout.write(f'  🔍 STDERR: {repr(stderr)}')
+                        
+                        # Se o erro indica que o comando tailwind não foi encontrado
+                        if 'Unknown command' in stderr or 'tailwind' in stderr:
+                            self.stdout.write('')
+                            self.stdout.write('  🔧 Isso indica que o django-tailwind não está no INSTALLED_APPS.')
+                            self.stdout.write('  💡 Adicione as seguintes apps ao settings.py:')
+                            self.stdout.write('')
+                            self.stdout.write('  INSTALLED_APPS += [')
+                            self.stdout.write("      'tailwind',")
+                            self.stdout.write("      'cazenga_ui',")
+                            self.stdout.write("      'django_browser_reload',")
+                            self.stdout.write("      'mathfilters',")
+                            self.stdout.write('  ]')
+                            self.stdout.write('')
+                            self.stdout.write('  MIDDLEWARE += [')
+                            self.stdout.write("      'django_browser_reload.middleware.BrowserReloadMiddleware',")
+                            self.stdout.write('  ]')
+                            self.stdout.write('')
+                            self.stdout.write(f"  TAILWIND_APP_NAME = '{self.TAILWIND_APP_NAME}'")
+                            self.stdout.write('  NPM_BIN_PATH = r"C:\\Program Files\\nodejs\\npm.cmd"  # Windows')
+                            self.stdout.write('')
+                            self.stdout.write('  ✅ Depois de configurar, execute novamente:')
+                            self.stdout.write('     python manage.py cazenga init --with-tailwind')
+                        
+                        return False
+                    
+                    self.stdout.write(f'  ✅ App {self.TAILWIND_APP_NAME} criada pelo django-tailwind')
+                    
+                except Exception as inner_e:
+                    self.stdout.write(f'  ⚠️ Erro na execução automática: {inner_e}')
+                    # Debug em caso de exceção
+                    import traceback
+                    self.stdout.write(f'  🔍 Traceback: {traceback.format_exc()}')
                     return False
-                
-                self.stdout.write(f'  ✅ App {self.TAILWIND_APP_NAME} criada pelo django-tailwind')
                 
             except Exception as e:
                 self.stdout.write(f'  ❌ Erro ao configurar django-tailwind: {e}')
+                import traceback
+                self.stdout.write(f'  🔍 Debug: Traceback completo: {traceback.format_exc()}')
                 return False
 
         return True
@@ -791,7 +844,7 @@ class Command(BaseCommand):
         
         self.stdout.write('\n📝 Estrutura criada:')
         self.stdout.write(f'  📁 {self.TAILWIND_APP_NAME}/templates/components/ui/     (componentes UI)')
-        self.stdout.write(f'  📁 {self.TAILWIND_APP_NAME}/templates/components/layout/ (componentes Layout)')  
+        self.stdout.write(f'  📁 {self.TAILWIND_APP_NAME}/templates/components/layout/ (componentes Layout)')
         self.stdout.write(f'  📁 {self.TAILWIND_APP_NAME}/static/js/                   (arquivos JavaScript)')
         self.stdout.write(f'  📁 {self.TAILWIND_APP_NAME}/static/icons/                (ícones SVG)')
         self.stdout.write(f'  📁 {self.TAILWIND_APP_NAME}/static_src/src/              (CSS fonte - temas)')
