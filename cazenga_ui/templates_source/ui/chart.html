@@ -1,6 +1,6 @@
 <!--
 Componente: Chart
-Uso: include "components/chart.html" with chart_type="line" chart_data="..."
+Uso: include "components/ui/chart.html" with chart_type="line" chart_data="..."
 
 Parâmetros:
 - chart_type: line, bar, pie, doughnut, radar, polarArea (padrão: line)
@@ -19,7 +19,7 @@ Parâmetros:
 - canvas_id: ID único para o canvas (opcional, gerado automaticamente)
 
 Exemplo:
-include "components/chart.html" with 
+include "components/ui/chart.html" with 
     chart_type="line"
     chart_data='{"labels": ["Jan", "Feb", "Mar"], "datasets": [{"label": "Vendas", "data": [10, 20, 30]}]}'
     title="Vendas Mensais"
@@ -28,7 +28,8 @@ Nota: Este componente requer Chart.js. Adicione ao seu template base:
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 -->
 {% with chart_type=chart_type|default:"line" responsive=responsive|default:True legend=legend|default:True tooltip=tooltip|default:True animation=animation|default:True width=width|default:"100%" height=height|default:"400px" %}
-{% with canvas_id=canvas_id|default:"chart-"|add:chart_type|add:"-"|add:title|slugify|default:"chart-default" %}
+{% with unique_id=title|default:"chart"|slugify|default:"chart" %}
+{% with canvas_id=canvas_id|default:"chart-"|add:chart_type|add:"-"|add:unique_id|default:"chart-default" %}
 <div class="chart-container {{ class|default:'' }}" x-data :style="{ width: '{{ width }}', height: '{{ height }}' }">
     {% if title or description %}
         <div class="chart-header mb-4">
@@ -192,5 +193,6 @@ Nota: Este componente requer Chart.js. Adicione ao seu template base:
         </div>
     </div>
 </div>
+{% endwith %}
 {% endwith %}
 {% endwith %}

@@ -327,7 +327,7 @@ class Command(BaseCommand):
         missing_deps = [dep for dep, installed in dependencies.items() if not installed]
         if missing_deps:
             self.stdout.write('\n1️⃣ Instale as dependências:')
-            self.stdout.write('   pip install django-cazenga-ui[tailwind]')
+            self.stdout.write('   pip install django-cazenga-ui')
             self.stdout.write('')
         
         # Se configuração está incompleta

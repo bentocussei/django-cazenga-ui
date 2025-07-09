@@ -447,7 +447,7 @@ def show_instructions(dependencies, config, urls_config, urls_path):
     missing_deps = [dep for dep, installed in dependencies.items() if not installed]
     if missing_deps:
         print('\n1️⃣ Instale as dependências:')
-        print('   pip install django-cazenga-ui[tailwind]')
+        print('   pip install django-cazenga-ui')
         print('')
     
     # Se configuração está incompleta

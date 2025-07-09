@@ -5,12 +5,18 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [Não lançado]
+## [0.1.1] - 2025-07-09
 
-### Adicionado
-- Preparações para próxima versão
+### Melhorias
+- **Instalação simplificada**: Dependências Tailwind (django-tailwind, django-browser-reload, django-mathfilters) agora são instaladas automaticamente com `pip install django-cazenga-ui`
+- **Compatibilidade**: Mantido suporte a `pip install django-cazenga-ui[tailwind]` para compatibilidade com documentação existente
+- **Documentação atualizada**: Simplificado comando de instalação em README, TUTORIAL e comandos CLI
 
-## [0.1.0] - 2025-01-07
+### Correções
+- **Prevenção de erros**: Eliminado `ModuleNotFoundError` para django-tailwind, django-browser-reload e django-mathfilters
+- **Experiência do usuário**: Instalação "funciona na primeira vez" sem necessidade de instalar dependências separadamente
+
+## [0.1.0] - 2025-07-08
 
 ### Adicionado
 
@@ -82,7 +88,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
   - Publicação automática no PyPI
 
 #### Empacotamento
-- **Dependências opcionais**: `pip install django-cazenga-ui[tailwind]`
+- **Dependências incluídas**: `pip install django-cazenga-ui` (inclui dependências Tailwind)
 - **Suporte a múltiplas versões**: Python 3.8+ e Django 3.2+
 - **Metadados completos** no pyproject.toml
 - **Manifesto de arquivos** para inclusão de templates e assets

@@ -6,7 +6,7 @@ Biblioteca moderna de componentes UI para Django usando Tailwind CSS v4 e Alpine
 
 ### 1. Instalação
 ```bash
-pip install django-cazenga-ui[tailwind]
+pip install django-cazenga-ui
 ```
 
 ### 2. Auto-configuração (Recomendado)
@@ -53,7 +53,7 @@ python manage.py cazenga status  # Verificar configuração
 ### Cenário A: Projeto Novo (Recomendado)
 ```bash
 # 1. Instalar
-pip install django-cazenga-ui[tailwind]
+pip install django-cazenga-ui
 
 # 2. Auto-configurar dependências
 cazenga-setup --auto-configure
@@ -77,7 +77,7 @@ python manage.py runserver
 ### Cenário B: Configuração Manual
 ```bash
 # 1. Instalar
-pip install django-cazenga-ui[tailwind]
+pip install django-cazenga-ui
 
 # 2. Configurar settings.py manualmente (ver Quick Start)
 
@@ -178,10 +178,10 @@ NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 ## 🚀 Instalação
 
 ```bash
-# Instalação básica
+# Instalação (inclui dependências Tailwind)
 pip install django-cazenga-ui
 
-# Com django-tailwind (recomendado)
+# Nota: também funciona com [tailwind] por compatibilidade
 pip install django-cazenga-ui[tailwind]
 ```
 

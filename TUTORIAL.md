@@ -110,7 +110,7 @@ source ~/.bashrc
 
 ### Como Funciona
 
-1. **Instala**: `pip install django-cazenga-ui[tailwind]`
+1. **Instala**: `pip install django-cazenga-ui`
 2. **Inicializa**: `python manage.py cazenga init --with-tailwind`
 3. **Adiciona componentes**: `python manage.py ui add button`
 4. **Personaliza**: Edita os arquivos HTML/CSS copiados
@@ -166,7 +166,7 @@ INSTALLED_APPS += ['theme']
 
 ```bash
 # 1. Instalar biblioteca com todas as dependências
-pip install django-cazenga-ui[tailwind]
+pip install django-cazenga-ui
 
 # 2. Auto-configurar projeto (configura settings.py e urls.py)
 cazenga-setup --auto-configure
@@ -431,7 +431,7 @@ django-admin startproject meu_blog
 cd meu_blog
 
 # 2. Instalar
-pip install django-cazenga-ui[tailwind]
+pip install django-cazenga-ui
 
 # 3. Auto-configurar
 cazenga-setup --auto-configure

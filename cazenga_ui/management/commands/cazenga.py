@@ -338,7 +338,7 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.ERROR('  ❌ django-tailwind não está instalado.')
             )
-            self.stdout.write('  💡 Instale com: pip install django-cazenga-ui[tailwind]')
+            self.stdout.write('  💡 Instale com: pip install django-cazenga-ui')
             return False
         
         # Verifica se Node.js está instalado (se não for pular npm)
@@ -824,7 +824,7 @@ class Command(BaseCommand):
         self.stdout.write('  python manage.py cazenga status')
         
         self.stdout.write('\n💡 Instalação recomendada:')
-        self.stdout.write('  pip install django-cazenga-ui[tailwind]')
+        self.stdout.write('  pip install django-cazenga-ui')
         self.stdout.write('  python manage.py cazenga init --with-tailwind --theme roxo')
     
     def _request_manual_theme_addition(self):

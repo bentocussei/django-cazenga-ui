@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-cazenga-ui"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     { name="Comunidade Cazenga", email="contato@cazenga.com" },
 ]
@@ -42,13 +42,15 @@ classifiers = [
 keywords = ["django", "tailwind", "ui", "components", "alpine", "shadcn"]
 dependencies = [
     "Django>=3.2",
+    "django-tailwind[reload]",
+    "django-browser-reload",
+    "django-mathfilters",
 ]
 
 [project.optional-dependencies]
 tailwind = [
-    "django-tailwind[reload]",
-    "django-browser-reload",
-    "django-mathfilters",
+    # Dependências já incluídas por padrão
+    # Mantida para compatibilidade com instruções existentes
 ]
 dev = [
     "pytest",
